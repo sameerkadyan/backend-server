@@ -21,7 +21,7 @@ mongoose.connect(process.env.MONGO_URI)
 // routes
 app.use("/api/auth", authRoutes);     // 🔐 login/register/profile
 app.use("/api/students", studentRoutes); // 📦 CRUD
-app.use("api/todos", todoRoutes);
+app.use("/api/todos", todoRoutes);
 
 // server
 const PORT = process.env.PORT || 5000;
