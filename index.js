@@ -10,8 +10,12 @@ const todoRoutes = require("./routes/todoRoutes");
 const app = express();
 
 // middleware
-app.use(cors());
+app.use(cors({
+  origin: "https://frontend-client-khaki.vercel.app",
+  credentials: true
+}));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // database
 console.log("MONGO_URI:", process.env.MONGO_URI);
