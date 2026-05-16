@@ -14,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 
 // database
+console.log("MONGO_URI:", process.env.MONGO_URI);
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB is connected"))
   .catch((err) => console.log(err));
