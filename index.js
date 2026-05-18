@@ -3,9 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-const studentRoutes = require("./routes/studentRoutes");
-const authRoutes = require("./routes/authRoutes"); // 🔥 add this
-const todoRoutes = require("./routes/todoRoutes");
+const studentRoutes = require("./src/routes/studentRoutes");
+const authRoutes = require("./src/routes/authRoutes"); // 🔥 add this
+const todoRoutes = require("./src/routes/todoRoutes");
 
 const app = express();
 
