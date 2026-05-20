@@ -26,6 +26,7 @@ const getProfileController = async (req, res) => {
     );
 
   } catch (error) {
+    console.log("PROFILE ERROR:", error);
     return sendResponse(
       res,
       500,
