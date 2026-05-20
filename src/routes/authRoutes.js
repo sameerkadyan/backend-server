@@ -1,34 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
-const uploadMiddleware = require("../middleware/uploadMiddleware");
 
-const authController = require("../controllers/authController");
+const registerController = require("../controllers/auth/registerController");
+const loginController = require("../controllers/auth/loginController");
+const verifyOTPController = require("../controllers/auth/verifyOTPController");
 
 const authMiddleware = require("../middleware/authMiddleware");
 
 // 📝 Register
-router.post("/register", authController.registerUser);
+router.post("/register", registerController);
 
 // OTP Verification
-router.post("/verify-otp", authController.verifyOTP);
+router.post("/verify-otp", verifyOTPController);
 
 // 🔐 Login
-router.post("/login", authController.loginUser);
+router.post("/login", loginController);
 
-// 👤 Profile
-router.get(
-  "/profile",
-  authMiddleware,
-  authController.getProfile
-);
-
-// 📸 Upload Profile Photo
-router.post(
-  "/upload-profile",
-  authMiddleware,
-  uploadMiddleware.single("profilePhoto"),
-  authController.uploadProfilePhoto
-);
 
 module.exports = router;
