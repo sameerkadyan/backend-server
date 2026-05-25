@@ -1,4 +1,5 @@
-const sendResponse = require("../../../utils/sendResponse")
+const User = require("../../../models/User");
+const sendResponse = require("../../../utils/sendResponse");
 
 //Upload Profile photo
 
@@ -17,9 +18,6 @@ const uploadProfilePhotoController = async (req, res) => {
     }
 
     if (!req.file) {
-    //   return res.status(400).json({
-    //     message: "No image uploaded",
-    //   });
     return sendResponse(
         res,
         400,
@@ -27,6 +25,8 @@ const uploadProfilePhotoController = async (req, res) => {
         "No image uploaded"
     );
     }
+
+    console.log(req.file);
 
     user.profilePhoto = req.file.path;
 
