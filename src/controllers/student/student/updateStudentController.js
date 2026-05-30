@@ -1,4 +1,4 @@
-const Student = require("../../../models/Student");
+const Student = require("../../../models/StudentProfile");
 const sendResponse = require("../../../utils/sendResponse");
 
 const updateStudentController = async (req, res) => {

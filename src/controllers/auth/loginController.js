@@ -56,9 +56,12 @@ const loginController = async (req, res) => {
 
     // 🔐 Generate token
     const token = jwt.sign(
-      { id: user._id },
+      {
+        id: user._id,
+        role: user.role,
+      },
       process.env.JWT_SECRET, // better to use env
-      { expiresIn: "1d" }
+      { expiresIn: "7d" }
     );
 
     return sendResponse(

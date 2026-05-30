@@ -1,49 +1,78 @@
 const express = require("express");
 const router = express.Router();
 
-// 🔐 Middleware
+// Middleware
 const authMiddleware = require("../middleware/authMiddleware");
+const authorizeRoles = require("../middleware/roleMiddleware");
 const uploadMiddleware = require("../middleware/uploadMiddleware");
 
+// Student Controllers
 const getStudents = require("../controllers/student/student/getStudentsController");
 const createStudent = require("../controllers/student/student/createStudentController");
 const updateStudent = require("../controllers/student/student/updateStudentController");
 const deleteStudent = require("../controllers/student/student/deleteStudentController");
 const getStudentById = require("../controllers/student/student/getStudentByIdController");
 
+// Profile Controllers
 const getProfile = require("../controllers/student/profile/getProfileController");
 const uploadProfilePhoto = require("../controllers/student/profile/uploadProfilePhotoController");
 
 // ==============================
-// PROFILE ROUTES FIRST
+// PROFILE ROUTES
 // ==============================
 
-router.get("/profile", authMiddleware, getProfile);
+router.get(
+  "/profile",
+  authMiddleware,
+  authorizeRoles("student"),
+  getProfile
+);
 
 router.post(
   "/upload-profile",
   authMiddleware,
+  authorizeRoles("student"),
   uploadMiddleware.single("profilePhoto"),
   uploadProfilePhoto
 );
 
 // ==============================
-// CRUD ROUTES
+// STUDENT CRUD
 // ==============================
 
-// ➕ CREATE student
-router.post("/", authMiddleware, createStudent);
+router.post(
+  "/",
+  authMiddleware,
+  authorizeRoles("student"),
+  createStudent
+);
 
-// 📖 READ all students
-router.get("/", authMiddleware, getStudents);
+router.get(
+  "/",
+  authMiddleware,
+  authorizeRoles("student"),
+  getStudents
+);
 
-// 🔍 READ single student
-router.get("/:id", authMiddleware, getStudentById);
+router.get(
+  "/:id",
+  authMiddleware,
+  authorizeRoles("student"),
+  getStudentById
+);
 
-// ✏️ UPDATE student
-router.put("/:id", authMiddleware, updateStudent);
+router.put(
+  "/:id",
+  authMiddleware,
+  authorizeRoles("student"),
+  updateStudent
+);
 
-// ❌ DELETE student
-router.delete("/:id", authMiddleware, deleteStudent);
+router.delete(
+  "/:id",
+  authMiddleware,
+  authorizeRoles("student"),
+  deleteStudent
+);
 
 module.exports = router;

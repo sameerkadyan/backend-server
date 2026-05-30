@@ -1,13 +1,15 @@
-const User = require("../../models/User")
+const User = require("../../models/User");
 const bcrypt = require("bcrypt");
+
 const sendEmail = require("../../utils/sendEmail");
-const sendResponse = require("../../utils/sendResponse")
+const sendResponse = require("../../utils/sendResponse");
 
 // Generate OTP
 const generateOTP = () => {
-  return Math.floor(100000 + Math.random() * 900000).toString();
+  return Math.floor(
+    100000 + Math.random() * 900000
+  ).toString();
 };
-
 
 // ==============================
 // 📝 REGISTER
@@ -15,43 +17,83 @@ const generateOTP = () => {
 const registerController = async (req, res) => {
   try {
 
-    const { name, email, password } = req.body;
+    const {
+      name,
+      email,
+      password,
+      role,
+    } = req.body;
 
     // Validation
-    if (!name || !email || !password) {
-      return sendResponse (
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !role
+    ) {
+      return sendResponse(
         res,
         400,
         false,
-        "All field required"
-      )
+        "All fields are required"
+      );
+    }
+
+    // Check valid role
+    const validRoles = [
+      "student",
+      "teacher",
+      "admin",
+    ];
+
+    if (!validRoles.includes(role)) {
+      return sendResponse(
+        res,
+        400,
+        false,
+        "Invalid role"
+      );
     }
 
     // Check existing user
-    const existingUser = await User.findOne({ email });
+    const existingUser =
+      await User.findOne({ email });
 
-    // If VERIFIED user already exists
-    if (existingUser && existingUser.isVerified) {
+    // VERIFIED user already exists
+    if (
+      existingUser &&
+      existingUser.isVerified
+    ) {
       return sendResponse(
         res,
         400,
         false,
         "User already exists"
-      )
+      );
     }
 
-    // Hash Password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash password
+    const hashedPassword =
+      await bcrypt.hash(password, 10);
 
     // Generate OTP
     const otp = generateOTP();
 
-    // If UNVERIFIED user exists
-    if (existingUser && !existingUser.isVerified) {
+    // UNVERIFIED user exists
+    if (
+      existingUser &&
+      !existingUser.isVerified
+    ) {
 
       existingUser.name = name;
-      existingUser.password = hashedPassword;
+
+      existingUser.password =
+        hashedPassword;
+
+      existingUser.role = role;
+
       existingUser.otp = otp;
+
       existingUser.otpExpire =
         Date.now() + 5 * 60 * 1000;
 
@@ -59,11 +101,11 @@ const registerController = async (req, res) => {
 
       await sendEmail(email, otp);
 
-      return sendResponse (
+      return sendResponse(
         res,
         200,
         true,
-        "OTP resent your email"
+        "OTP resent to your email"
       );
     }
 
@@ -72,8 +114,10 @@ const registerController = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role,
       otp,
-      otpExpire: Date.now() + 5 * 60 * 1000
+      otpExpire:
+        Date.now() + 5 * 60 * 1000,
     });
 
     await newUser.save();
@@ -81,7 +125,7 @@ const registerController = async (req, res) => {
     // Send Email
     await sendEmail(email, otp);
 
-     return sendResponse(
+    return sendResponse(
       res,
       201,
       true,
@@ -91,6 +135,7 @@ const registerController = async (req, res) => {
           id: newUser._id,
           name: newUser.name,
           email: newUser.email,
+          role: newUser.role,
         },
       }
     );

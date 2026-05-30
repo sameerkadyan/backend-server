@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  
+
   name: {
     type: String,
     required: true,
@@ -18,6 +18,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     minlength: 6,
+  },
+
+  // ROLE
+  role: {
+    type: String,
+    enum: ["student", "teacher", "admin"],
+    required: true,
   },
 
   profilePhoto: {
