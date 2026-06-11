@@ -4,7 +4,9 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 
 const studentRoutes = require("./src/routes/studentRoutes");
+const teacherRoutes = require("./src/routes/teacherRoutes");
 const authRoutes = require("./src/routes/authRoutes");
+
 
 const app = express();
 
@@ -39,6 +41,7 @@ mongoose
 // routes
 app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
+app.use("/api/teachers", teacherRoutes);
 
 // server
 const PORT = process.env.PORT || 5000;
