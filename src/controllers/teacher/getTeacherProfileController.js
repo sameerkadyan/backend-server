@@ -2,20 +2,22 @@ const TeacherProfile = require("../../models/TeacherProfile");
 const sendResponse = require("../../utils/sendResponse");
 
 const getTeacherProfileController = async (req, res) => {
-  console.log("JWT USER:", req.user);
-  console.log("SEARCHING USER ID:", req.user.id);
   try {
-    const teacher = await TeacherProfile.findOne({
+    let teacher = await TeacherProfile.findOne({
       userId: req.user.id,
     }).populate("userId", "name email");
 
+    // Auto-create profile if missing
     if (!teacher) {
-      return sendResponse(
-        res,
-        404,
-        false,
-        "Teacher profile not found"
-      );
+      teacher = await TeacherProfile.create({
+        userId: req.user.id,
+        subject: "",
+        experience: 0,
+      });
+
+      teacher = await TeacherProfile.findById(
+        teacher._id
+      ).populate("userId", "name email");
     }
 
     return sendResponse(
